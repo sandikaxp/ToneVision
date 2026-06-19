@@ -149,5 +149,3 @@ To the maximum extent permitted by applicable law, the Developer disclaims all l
 
 ---
 
-*Created by the ToneVision team*
-
