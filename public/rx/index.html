@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToneVision - Receiver Screen</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&family=Open+Dyslexic&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Connection / Status Notifications -->
+    <div class="header-overlay">
+        <span class="subtle-status">
+            <span class="status-dot status-offline" id="status-dot"></span>
+            <span id="status-text">Connecting...</span>
+            <span class="room-label">Room: <strong id="room-name">-</strong></span>
+        </span>
+    </div>
+
+    <!-- Live Paused Alert -->
+    <div class="overlay-banner" id="paused-banner" style="display: none;">
+        ⏸ Stream Paused by Typist
+    </div>
+
+    <!-- Immersive Reading Container -->
+    <main class="reader-container" id="reader-container">
+        <div class="reader-view" id="reader-view">
+            <!-- Dynamic streaming content goes here -->
+            <div class="placeholder-text">Waiting for transmitter to begin typing...</div>
+        </div>
+    </main>
+
+    <!-- Floating Toggle Settings Button -->
+    <button class="btn-floating-settings" id="btn-settings-toggle" onclick="toggleSettingsPanel()" title="Open Display Settings">
+        ⚙️
+    </button>
+
+    <!-- Floating Settings Control Panel -->
+    <div class="settings-panel" id="settings-panel">
+        <div class="settings-header">
+            <h3>Display Accessibility Settings</h3>
+            <button class="btn-close-settings" onclick="toggleSettingsPanel()">✕</button>
+        </div>
+
+        <div class="settings-body">
+            <!-- Theme Select -->
+            <div class="setting-group">
+                <label for="theme-select">Visual Theme</label>
+                <select id="theme-select" onchange="applyTheme()">
+                    <option value="theme-navy">Navy Glassmorphism (Premium)</option>
+                    <option value="theme-dark">Deep Slate Dark</option>
+                    <option value="theme-sepia">Warm Sepia</option>
+                    <option value="theme-light">High Contrast Light</option>
+                </select>
+            </div>
+
+            <!-- Font Family Select -->
+            <div class="setting-group">
+                <label for="font-select">Typography</label>
+                <select id="font-select" onchange="applyFontFamily()">
+                    <option value="font-sans">Inter Sans-Serif</option>
+                    <option value="font-mono">Fira Monospace</option>
+                    <option value="font-dyslexic">OpenDyslexic (Dyslexia Friendly)</option>
+                </select>
+            </div>
+
+            <!-- Font Scale Range -->
+            <div class="setting-group">
+                <label for="font-scale">Font Size Scale (<span id="font-scale-display">2.0</span>x)</label>
+                <input type="range" id="font-scale" min="1.0" max="10.0" step="0.1" value="2.0" oninput="applyFontScale()">
+            </div>
+
+            <!-- Cognitive Focus Mode Checkbox -->
+            <div class="setting-group checkbox-group">
+                <label class="switch">
+                    <input type="checkbox" id="focus-mode-toggle" onchange="toggleFocusMode()" checked>
+                    <span class="slider"></span>
+                </label>
+                <div class="checkbox-label">
+                    <strong>Cognitive Focus Mode</strong>
+                    <span>Highlights current sentence and fades historical text</span>
+                </div>
+            </div>
+
+            <!-- Bionic Reading Checkbox -->
+            <div class="setting-group checkbox-group">
+                <label class="switch">
+                    <input type="checkbox" id="bionic-toggle" onchange="toggleBionicMode()">
+                    <span class="slider"></span>
+                </label>
+                <div class="checkbox-label">
+                    <strong>Bionic Reading</strong>
+                    <span>Bolds word starting letters for faster scanning</span>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1rem; text-align: center; font-size: 0.75rem; margin-top: 0.5rem;">
+                <a href="/disclaimer.html" style="color: var(--panel-text); opacity: 0.6; text-decoration: none; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">⚖️ Legal Disclaimer</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

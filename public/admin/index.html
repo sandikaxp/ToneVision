@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToneVision - Admin Console</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Admin Authentication Login -->
+    <div class="auth-overlay" id="auth-overlay">
+        <div class="auth-card">
+            <h2>🔑 Admin Authentication</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;">
+                Enter the administrator password to access room management controls.
+            </p>
+            <div class="form-group">
+                <input type="password" id="admin-pass-input" placeholder="Enter Admin Password" autofocus>
+            </div>
+            <button onclick="authenticateAdmin()">Unlock Dashboard</button>
+            <a href="/" style="display: block; margin-top: 1.2rem; color: var(--text-secondary); text-decoration: none; font-size: 0.85rem;">Cancel & Back</a>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Main Layout -->
+    <div class="container" id="main-container" style="display: none;">
+        <header>
+            <div class="header-content">
+                <h1>ToneVision Admin Portal <span style="font-size: 0.95rem; opacity: 0.7; font-weight: 500; vertical-align: middle; margin-left: 0.5rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); padding: 0.2rem 0.6rem; border-radius: 20px; font-family: 'Inter', sans-serif; display: inline-block; color: var(--text-primary); -webkit-text-fill-color: var(--text-primary) !important;">v1.0.2</span></h1>
+                <p class="subtitle">Pre-create rooms, assign security PINs, and manage active network sessions.</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn-lock" onclick="lockDashboard()">🔒 Lock</button>
+                <a href="/" class="btn-back">Landing Page ➡</a>
+            </div>
+        </header>
+
+        <div class="admin-grid">
+            <!-- Left Column: Pre-Create Room & Server Settings -->
+            <div class="sidebar-stack" style="display: flex; flex-direction: column; gap: 2rem;">
+                <!-- Room Creation Panel -->
+                <div class="panel">
+                    <h2>➕ Pre-Create Room</h2>
+                    <div class="form-group">
+                        <label for="new-room-id">Room ID</label>
+                        <input type="text" id="new-room-id" placeholder="e.g. math-class" autocomplete="off">
+                        <span class="input-tip">Lowercase, alphanumeric characters, hyphens, and underscores only.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-room-pin">4-Digit Security PIN</label>
+                        <input type="password" id="new-room-pin" placeholder="e.g. 9999" maxlength="4" pattern="\d{4}" inputmode="numeric">
+                        <span class="input-tip">PIN required for typist to broadcast to this room.</span>
+                    </div>
+                    <button class="btn-primary" onclick="preCreateRoom()">Pre-Create Room</button>
+                </div>
+
+                <!-- Server Settings Panel -->
+                <div class="panel">
+                    <h2>⚙️ Server Settings</h2>
+                    <div class="form-group">
+                        <label for="settings-new-password">New Admin Password</label>
+                        <input type="password" id="settings-new-password" placeholder="Leave blank to keep current">
+                        <span class="input-tip">Updates dashboard unlock password.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="settings-keep-alive">Session Keep-Alive (Grace Period)</label>
+                        <select id="settings-keep-alive" style="width: 100%; background: rgba(15, 23, 42, 0.6); border: 1px solid var(--glass-border); border-radius: 10px; padding: 0.8rem 1rem; color: var(--text-primary); font-family: inherit; font-size: 0.95rem; outline: none;">
+                            <option value="0">0 minutes (Permanent)</option>
+                            <option value="5">5 minutes</option>
+                            <option value="10" selected>10 minutes</option>
+                            <option value="15">15 minutes</option>
+                            <option value="30">30 minutes</option>
+                            <option value="60">1 hour</option>
+                        </select>
+                        <span class="input-tip">Time text history is kept in memory after typist disconnects.</span>
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 2rem;">
+                        <input type="checkbox" id="settings-auto-open" style="width: auto; cursor: pointer;" checked>
+                        <label for="settings-auto-open" style="margin-bottom: 0; cursor: pointer; text-transform: none; font-size: 0.9rem; letter-spacing: normal;">Auto-Launch Browser on Startup</label>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+                        <button class="btn-primary" onclick="saveAdminSettings()">Save Settings</button>
+                        <button class="btn-delete" style="width: 100%; padding: 0.85rem;" onclick="factoryResetServer()">⚠️ Factory Reset Server</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Active Rooms Registry & Active Connections Monitor -->
+            <div class="main-stack" style="display: flex; flex-direction: column; gap: 2rem;">
+                <!-- Active Rooms Registry Panel -->
+                <div class="panel">
+                    <h2>📋 Active Rooms Registry</h2>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Room ID</th>
+                                    <th>PIN</th>
+                                    <th>Typist Status</th>
+                                    <th>Stream Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rooms-table-body">
+                                <tr>
+                                    <td colspan="5" class="no-data">Loading registry database...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Active Connections Monitor Panel -->
+                <div class="panel">
+                    <h2>🌐 Active Connections Monitor</h2>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Client IP Address</th>
+                                    <th>Role</th>
+                                    <th>Assigned Room</th>
+                                    <th>Uptime</th>
+                                </tr>
+                            </thead>
+                            <tbody id="connections-table-body">
+                                <tr>
+                                    <td colspan="4" class="no-data">No active client connections.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with Developer Info -->
+        <footer style="margin-top: 3rem; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1.5rem;">
+            <div style="font-size: 0.85rem; color: var(--text-secondary); opacity: 0.85;">
+                Developer &nbsp;|&nbsp; Email: <a href="mailto:sandika.periris@gmail.com" style="color: var(--accent); text-decoration: none; font-weight: 500;">sandika.periris@gmail.com</a> &nbsp;|&nbsp; <a href="/disclaimer.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">⚖️ Legal Disclaimer</a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>

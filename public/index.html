@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToneVision - Assistive Text Streaming</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #020617 100%);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #818cf8;
+            --accent-glow: rgba(129, 140, 248, 0.15);
+            --accent-gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            --success: #34d399;
+            --error: #f87171;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 2rem 1rem;
+        }
+
+        /* Glassmorphism Card Container */
+        .container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 640px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.6s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.05em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            font-weight: 400;
+        }
+
+        .panel {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Active Rooms List styling */
+        .rooms-list-container {
+            width: 100%;
+            min-height: 250px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .rooms-list {
+            list-style: none;
+            overflow-y: auto;
+            max-height: 350px;
+            padding-right: 0.2rem;
+        }
+
+        /* Custom scrollbar */
+        .rooms-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .rooms-list::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        .rooms-list::-webkit-scrollbar-thumb {
+            background: var(--glass-border);
+            border-radius: 3px;
+        }
+
+        .room-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1rem 1.4rem;
+            margin-bottom: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .room-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(3px);
+        }
+
+        .room-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .room-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .room-status {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-online { background-color: var(--success); }
+        .status-offline { background-color: var(--text-secondary); }
+
+        .room-actions {
+            display: flex;
+            gap: 0.6rem;
+        }
+
+        .btn-action {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-read {
+            background: rgba(52, 211, 153, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-read:hover {
+            background: var(--success);
+            color: #0f172a;
+        }
+
+        .btn-type {
+            background: rgba(129, 140, 248, 0.15);
+            color: var(--accent);
+            border: 1px solid rgba(129, 140, 248, 0.3);
+        }
+
+        .btn-type:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .no-rooms {
+            color: var(--text-secondary);
+            font-style: italic;
+            text-align: center;
+            margin: auto;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Footer admin panel link */
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .admin-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .admin-link:hover {
+            color: var(--accent);
+        }
+
+        /* Modal styling for joining active room as typist */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .modal h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        button {
+            width: 100%;
+            background: var(--accent-gradient);
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            opacity: 0.95;
+        }
+
+        input {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1 id="app-title">ToneVision</h1>
+            <p class="subtitle">Assistive Text Streaming</p>
+        </header>
+
+        <div class="panel">
+            <h2>📢 Active Rooms Directory</h2>
+            <div class="rooms-list-container">
+                <ul class="rooms-list" id="rooms-list">
+                    <div class="no-rooms">Scanning database for active rooms...</div>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <a href="/admin/index.html" class="admin-link">🔒 Open Admin Panel</a>
+            <span style="color: var(--text-secondary); opacity: 0.4; margin: 0 0.8rem;">|</span>
+            <a href="/disclaimer.html" class="admin-link">⚖️ Legal Disclaimer</a>
+        </footer>
+    </div>
+
+    <!-- Modal for PIN entry -->
+    <div class="modal-overlay" id="pin-modal">
+        <div class="modal">
+            <h3>Enter Room PIN</h3>
+            <p id="modal-room-text" style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.9rem;"></p>
+            <div class="form-group">
+                <input type="password" id="join-room-pin" placeholder="Enter 4-Digit PIN" maxlength="4" pattern="\d{4}" inputmode="numeric" autofocus>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-secondary" onclick="closePinModal()">Cancel</button>
+                <button onclick="submitPin()">Verify & Join</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedRoomId = "";
+
+        // Fetch active rooms from server
+        async function fetchActiveRooms() {
+            const listEl = document.getElementById("rooms-list");
+            try {
+                const response = await fetch("/api/rooms");
+                if (!response.ok) throw new Error("Failed to fetch rooms");
+                const rooms = await response.json();
+
+                if (rooms.length === 0) {
+                    listEl.innerHTML = `
+                        <div class="no-rooms">
+                            No active rooms found.<br>
+                            <span style="font-size: 0.85rem; opacity: 0.7;">Please ask your Administrator to pre-create a room from the Admin Panel.</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                listEl.innerHTML = "";
+                rooms.forEach(room => {
+                    const li = document.createElement("li");
+                    li.className = "room-item";
+                    
+                    const details = document.createElement("div");
+                    details.className = "room-details";
+                    
+                    const title = document.createElement("span");
+                    title.className = "room-title";
+                    title.textContent = room.room_id;
+                    
+                    const status = document.createElement("span");
+                    status.className = "room-status";
+                    
+                    const dot = document.createElement("span");
+                    dot.className = `status-dot ${room.tx_connected ? 'status-online' : 'status-offline'}`;
+                    
+                    const text = document.createTextNode(room.tx_connected ? " Typist active" : " Waiting for typist");
+                    
+                    status.appendChild(dot);
+                    status.appendChild(text);
+                    details.appendChild(title);
+                    details.appendChild(status);
+
+                    const actions = document.createElement("div");
+                    actions.className = "room-actions";
+
+                    // Read link
+                    const readLink = document.createElement("a");
+                    readLink.className = "btn-action btn-read";
+                    readLink.href = `/rx/index.html?room=${encodeURIComponent(room.room_id)}`;
+                    readLink.textContent = "Read";
+                    
+                    // Type button (reconnect/join)
+                    const typeBtn = document.createElement("button");
+                    typeBtn.className = "btn-action btn-type";
+                    typeBtn.textContent = "Type";
+                    typeBtn.onclick = () => openPinModal(room.room_id);
+
+                    actions.appendChild(readLink);
+                    actions.appendChild(typeBtn);
+
+                    li.appendChild(details);
+                    li.appendChild(actions);
+                    listEl.appendChild(li);
+                });
+            } catch (err) {
+                console.error("Error scanning rooms:", err);
+                listEl.innerHTML = '<div class="no-rooms" style="color: var(--error);">Failed to connect to local server.</div>';
+            }
+        }
+
+        // PIN modal for joining active sessions
+        function openPinModal(roomId) {
+            selectedRoomId = roomId;
+            document.getElementById("modal-room-text").textContent = `Authenticate to type in room: "${roomId}"`;
+            document.getElementById("pin-modal").style.display = "flex";
+            
+            // Try to pre-fill PIN if it exists in localStorage
+            const savedPin = localStorage.getItem(`tv_pin_${roomId}`);
+            if (savedPin) {
+                document.getElementById("join-room-pin").value = savedPin;
+            } else {
+                document.getElementById("join-room-pin").value = "";
+            }
+            document.getElementById("join-room-pin").focus();
+        }
+
+        function closePinModal() {
+            document.getElementById("pin-modal").style.display = "none";
+            selectedRoomId = "";
+        }
+
+        function submitPin() {
+            const pinEl = document.getElementById("join-room-pin");
+            const pin = pinEl.value.trim();
+
+            if (pin.length !== 4 || isNaN(pin)) {
+                alert("Please enter a 4-digit PIN.");
+                pinEl.focus();
+                return;
+            }
+
+            // Save PIN and redirect
+            localStorage.setItem(`tv_pin_${selectedRoomId}`, pin);
+            localStorage.setItem("tv_active_room", selectedRoomId);
+            window.location.href = `/tx/index.html?room=${encodeURIComponent(selectedRoomId)}`;
+        }
+
+        // Fetch rooms initially and poll every 4 seconds
+        fetchActiveRooms();
+        setInterval(fetchActiveRooms, 4000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToneVision - Legal Disclaimer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #020617 100%);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #818cf8;
+            --accent-gradient: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 680px;
+            box-shadow: var(--shadow);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .content {
+            background: rgba(15, 23, 42, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 18px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .content h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-top: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 0.4rem;
+        }
+
+        .content p {
+            color: rgba(248, 250, 252, 0.9);
+        }
+
+        .content ul {
+            list-style-type: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .content li strong {
+            color: var(--accent);
+        }
+
+        .btn-back {
+            display: block;
+            width: fit-content;
+            margin: 2rem auto 0 auto;
+            padding: 0.8rem 2rem;
+            background: var(--accent-gradient);
+            color: white;
+            text-decoration: none;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            text-align: center;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-back:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Legal Disclaimer</h1>
+            <p class="subtitle">ToneVision Terms & Limitation of Liability</p>
+        </header>
+
+        <div class="content">
+            <p style="font-weight: 600; text-align: center;">IMPORTANT NOTICE: PLEASE READ CAREFULLY BEFORE USE.</p>
+            
+            <h2>1. "As-Is" and "As-Available" Provision</h2>
+            <p>This software (<strong>ToneVision</strong>) is provided by the Developer <strong>"as is"</strong> and <strong>"as available"</strong> without warranty of any kind, either express, implied, statutory, or otherwise, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, or non-infringement.</p>
+
+            <h2>2. No Warranty of Uptime, Latency, or Accuracy</h2>
+            <p>The Developer does not guarantee that the operation of the software will be uninterrupted, secure, error-free, or free from data loss or transmission latency. Users assume all responsibility for verifying the accuracy of any real-time text streamed via the application.</p>
+
+            <h2>3. No Guarantee of Accessibility Compliance</h2>
+            <p>While this software includes features to assist with visual accessibility, the Developer makes no representation or warranty that using this application guarantees compliance with any national, regional, or local accessibility laws, regulations, or standards (such as the Americans with Disabilities Act (ADA), WCAG, or equivalent regional guidelines).</p>
+
+            <h2>4. Limitation of Liability</h2>
+            <p>In no event shall the Developer be liable for any claim, damages, or other liability, whether in an action of contract, tort (including negligence), strict liability, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software. This includes, without limitation, direct, indirect, incidental, special, exemplary, or consequential damages (such as loss of data, loss of profits, or business interruption).</p>
+        </div>
+
+        <a href="javascript:history.back()" class="btn-back">Go Back</a>
+    </div>
+
+</body>
+</html>

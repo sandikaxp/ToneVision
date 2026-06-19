@@ -1,0 +1,5 @@
+{
+  "admin_password": "admin",
+  "keep_alive_mins": 10,
+  "auto_open_browser": true
+}
