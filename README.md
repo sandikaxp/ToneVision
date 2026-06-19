@@ -51,10 +51,10 @@ Pre-compiled standalone packages for Windows, macOS, and Linux are available on 
 
 ```powershell
 # Clone the repository
-git clone https://github.com/sandikaxp/ToneVision.git C:\Sandika\project\ToneVision
+git clone https://github.com/sandikaxp/ToneVision.git
 
 # Change to the project directory
-cd C:\Sandika\project\ToneVision
+cd ToneVision
 
 # Build the release binary (optimised)
 cargo build --release
