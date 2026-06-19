@@ -2,6 +2,9 @@
 
 **ToneVision** is a lightweight, ultra-low-latency assistive text streaming application operating on a Local Web-Server Architecture. It allows typists to stream their text in real-time to readers over a Local Area Network (LAN). The server is built in **Rust** for performance and includes a system tray icon for Windows, while serving fully responsive, premium-designed web clients from memory.
 
+## 📦 Standalone Downloads
+Pre-compiled standalone packages for Windows, macOS, and Linux are available on the [GitHub Releases](https://github.com/sandikaxp/ToneVision/releases) page. Download the zip/tar.gz archive for your platform, extract it, and run the executable directly.
+
 ---
 
 ## Table of Contents
@@ -48,7 +51,7 @@
 
 ```powershell
 # Clone the repository
-git clone https://github.com/yourorg/ToneVision.git C:\Sandika\project\ToneVision
+git clone https://github.com/sandikaxp/ToneVision.git C:\Sandika\project\ToneVision
 
 # Change to the project directory
 cd C:\Sandika\project\ToneVision
